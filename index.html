@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina Grua</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: blue;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+        }
+        .live-stream {
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+        .live-stream iframe {
+            width: 100%;
+            height: 315px;
+            max-width: 800px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 10px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        button {
+            width: 70px;
+            height: 70px;
+            background-color: lightgray;
+            border: none;
+            border-radius: 5px;
+            font-size: 28px;
+            margin: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        button:active {
+            background-color: gray;
+        }
+        button:focus {
+            outline: none;
+        }
+        .descend-button {
+            width: 200px;
+            height: 50px;
+            font-size: 32px;
+        }
+        @media (max-width: 600px) {
+            button {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            .live-stream iframe {
+                height: 200px;
+            }
+            .descend-button {
+                width: 200px;
+                height: 50px;
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Máquina Grua
+    </header>
+    <div class="live-stream">
+        <iframe src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera01" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="button-container">
+        <div class="button-row">
+            <button ontouchstart="handleTouchStart(30); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(30)" onmouseup="handleMouseUp()">⬆️</button>
+        </div>
+        <div class="button-row">
+            <button ontouchstart="handleTouchStart(20); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(20)" onmouseup="handleMouseUp()">⬅️</button>
+            <button ontouchstart="handleTouchStart(10); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(10)" onmouseup="handleMouseUp()">➡️</button>
+        </div>
+        <div class="button-row">
+            <button ontouchstart="handleTouchStart(40); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(40)" onmouseup="handleMouseUp()">⬇️</button>
+        </div>
+        <div class="button-row">
+            <button class="descend-button" ontouchstart="handleTouchStart(50); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(50)" onmouseup="handleMouseUp()">DESCER garra</button>
+        </div>
+        <div class="button-row">
+            <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
+        </div>
+        <!-- Botões para iniciar e parar a música -->
+        <div class="button-row">
+            <button onclick="startMusic()">Iniciar</button>
+            <button onclick="stopMusic()">Parar</button>
+        </div>
+    </div>
+
+    <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+    <audio id="claw-sound" src="garra.mp3" preload="auto"></audio>
+    <audio id="background-music" src="jogo.mp3" loop></audio>
+
+    <script>
+        let sendingInterval;
+        let soundInterval;
+        let initialTimeout;
+        let clawSoundPlayed = false; // Flag to track if claw sound has been played
+        const backgroundMusic = document.getElementById('background-music');
+
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            sound.currentTime = 0; // Rewind to the start
+            sound.play();
+        }
+
+        function startSending(value) {
+            sendingInterval = setInterval(() => {
+                sendValue(value);
+            }, 30); // Envia a cada 100ms
+        }
+
+        function stopSending() {
+            clearInterval(sendingInterval);
+            clearInterval(soundInterval);
+            clearTimeout(initialTimeout);
+            clawSoundPlayed = false; // Reset flag when stopping sending
+        }
+
+        function sendValue(value) {
+            const endpoint = getEndpoint(value);
+            fetch(`https://testeeeeeee-093ae8864267.herokuapp.com/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
+                },
+                body: JSON.stringify({ value: value })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar a requisição');
+                }
+                console.log(`Valor ${value} enviado com sucesso para ${endpoint}`);
+            })
+            .catch(error => {
+                console.error('Erro ao enviar requisição:', error);
+            });
+        }
+
+        function getEndpoint(value) {
+            switch (value) {
+                case 10:
+                    return 'setacima';
+                case 20:
+                    return 'setabaixo';
+                case 30:
+                    return 'setaesquerda';
+                case 40:
+                    return 'setadireita';
+                case 50:
+                    return 'descer';
+                case 60:
+                    return 'credito';
+                default:
+                    throw new Error('Valor inválido');
+            }
+        }
+
+        function handleTouchStart(value) {
+            initialTimeout = setTimeout(() => {
+                if (value === 50 && !clawSoundPlayed) {
+                    playSound('claw-sound');
+                    clawSoundPlayed = true; // Set flag to true after playing sound
+                } else if (value !== 50) {
+                    playSound('click-sound');
+                    soundInterval = setInterval(() => playSound('click-sound'), 700); // Play click sound every 700ms
+                }
+            }, 100); // Wait 700ms before first sound
+            startSending(value);
+        }
+
+        function handleTouchEnd() {
+            stopSending();
+        }
+
+        function handleMouseDown(value) {
+            initialTimeout = setTimeout(() => {
+                if (value === 50 && !clawSoundPlayed) {
+                    playSound('claw-sound');
+                    clawSoundPlayed = true; // Set flag to true after playing sound
+                } else if (value !== 50) {
+                    playSound('click-sound');
+                    soundInterval = setInterval(() => playSound('click-sound'), 700); // Play click sound every 600ms
+                }
+            }, 800); // Wait 100ms before first sound
+            startSending(value);
+        }
+
+        function handleMouseUp() {
+            stopSending();
+        }
+
+        function startMusic() {
+            backgroundMusic.play().catch(error => {
+                console.log('Playback failed due to a user interaction requirement:', error);
+            });
+        }
+
+        function stopMusic() {
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0; // Rewind to the start
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startMusic(); // Opcional: iniciar a música quando a página carregar
+        });
+    </script>
+</body>
+</html>
