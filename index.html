@@ -130,9 +130,13 @@
         }
 
         function startSending(value) {
-            sendingInterval = setInterval(() => {
-                sendValue(value);
-            }, 100); // Envia a cada 100ms
+            if (value === 50) {
+                sendValue(value); // Envia a requisição apenas uma vez para o botão "Descer garra"
+            } else {
+                sendingInterval = setInterval(() => {
+                    sendValue(value);
+                }, 100); // Continua enviando a cada 100ms para os outros botões
+            }
         }
 
         function stopSending() {
@@ -191,7 +195,7 @@
                     playSound('click-sound');
                     soundInterval = setInterval(() => playSound('click-sound'), 700); // Play click sound every 700ms
                 }
-            }, 100); // Wait 700ms before first sound
+            }, 100); // Wait 100ms before first sound
             startSending(value);
         }
 
@@ -206,9 +210,9 @@
                     clawSoundPlayed = true; // Set flag to true after playing sound
                 } else if (value !== 50) {
                     playSound('click-sound');
-                    soundInterval = setInterval(() => playSound('click-sound'), 700); // Play click sound every 600ms
+                    soundInterval = setInterval(() => playSound('click-sound'), 700); // Play click sound every 700ms
                 }
-            }, 800); // Wait 100ms before first sound
+            }, 100); // Wait 100ms before first sound
             startSending(value);
         }
 
