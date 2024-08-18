@@ -155,7 +155,7 @@
                 <button data-action="setabaixo" id="down-button">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" data-action="descer" id="descend-button">DESCER</button>
+                <button data-action="descer" id="descend-button">DESCER</button>
             </div>
             <div class="button-row">
                 <button data-action="comprar" id="buy-button">💳</button>
@@ -181,7 +181,7 @@
                 <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" data-action="descer" id="descend-button2">DESCER</button>
+                <button  data-action="descer" id="descend-button2">DESCER</button>
             </div>
             <div class="button-row">
                 <button data-action="comprar" id="buy-button2">💳</button>
@@ -224,7 +224,7 @@
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
             } else {
-                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
+                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
             }
             fetch(url, {
                 method: method,
