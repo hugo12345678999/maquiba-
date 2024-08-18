@@ -305,11 +305,12 @@
             try {
                 const response = await fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/status/${machineId}`);
                 const data = await response.json();
-                if (data && data.includes('null')) {
-                    console.log('Status retornou null. Não é possível exibir a máquina.');
-                    return false;
+                if (data && data !== 'null') {
+                    console.log('Status da máquina OK');
+                    return true;
                 }
-                return true;
+                console.log('Status retornou null. Não é possível exibir a máquina.');
+                return false;
             } catch (error) {
                 console.error('Erro ao verificar o status da máquina:', error);
                 return false;
