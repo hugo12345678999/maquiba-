@@ -83,6 +83,7 @@
             height: 50px;
             font-size: 32px;
         }
+        /* Ajustes para dispositivos móveis */
         @media (max-width: 768px) {
             .content-container {
                 flex-direction: column;
@@ -226,11 +227,11 @@
                 if (!response.ok) {
                     throw new Error('Erro ao enviar a requisição');
                 }
-                console.log(`Ação ${action} enviada com sucesso`);
-                if (action === 'descer') playSound('claw-sound');
-                else playSound('click-sound');
+                console.log(`Ação ${action} enviada com sucesso.`);
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                console.error('Erro:', error);
+            });
         }
 
         function startSendingRequests(action) {
@@ -249,48 +250,29 @@
             }
         }
 
-        function checkMachineStatus(machineId) {
-            return fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/status/${machineId}`, {
-                headers: {
-                    'x-access-token': token
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Status da máquina:', data); // Depuração
-                if (data.online === "9999-12-31T23:59:59.000Z") {
-                    return true; // Máquina pode ser acessada
-                }
-                return false; // Máquina não pode ser acessada
-            })
-            .catch(error => {
-                console.error('Erro ao verificar status da máquina:', error);
-                return false; // Tratar erro como inacessível
-            });
-        }
-
-        function handleMachineClick(machineId) {
-            checkMachineStatus(machineId).then(canAccess => {
-                if (canAccess) {
-                    document.querySelectorAll('.content-container').forEach(container => {
-                        container.style.display = 'none';
-                    });
-                    document.getElementById(`${machineId}-content`).style.display = 'flex';
-                } else {
-                    alert('Máquina não disponível.');
-                }
-            });
-        }
-
-        document.getElementById('maquina1').addEventListener('click', () => handleMachineClick('maquina1'));
-        document.getElementById('maquina2').addEventListener('click', () => handleMachineClick('maquina2'));
-
         document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #descend-button').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
             button.addEventListener('mouseup', stopSendingRequests);
             button.addEventListener('mouseleave', stopSendingRequests);
             button.addEventListener('touchend', stopSendingRequests);
+        });
+
+        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #descend-button2').forEach(button => {
+            button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
+            button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
+            button.addEventListener('mouseup', stopSendingRequests);
+            button.addEventListener('mouseleave', stopSendingRequests);
+            button.addEventListener('touchend', stopSendingRequests);
+        });
+
+        document.querySelectorAll('#maquina1, #maquina2').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.content-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+                document.getElementById(`${button.id}-content`).style.display = 'flex';
+            });
         });
 
         backgroundMusic.play();
