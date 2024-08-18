@@ -155,10 +155,10 @@
                 <button data-action="setabaixo" id="down-button">⬇️</button>
             </div>
             <div class="button-row">
-                <button data-action="descer" id="descend-button">DESCER</button>
+                <button class="descend-button" data-action="descer" id="descend-button">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="credito" id="buy-button">💳</button>
+                <button data-action="comprar" id="buy-button">💳</button>
             </div>
         </div>
     </div>
@@ -181,10 +181,10 @@
                 <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button  data-action="descer" id="descend-button2">DESCER</button>
+                <button class="descend-button" data-action="descer" id="descend-button2">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="credito" id="buy-button2">💳</button>
+                <button data-action="comprar" id="buy-button2">💳</button>
             </div>
         </div>
     </div>
@@ -220,7 +220,7 @@
             const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
             let url = '';
             let method = 'POST';
-            if (action === 'hug') {
+            if (action === 'descer') {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
             } else {
@@ -249,7 +249,7 @@
             if (action === 'descer') {
                 playSound('claw-sound');
                 clawSoundPlayed = true;
-                sendAction(action); // Envia uma requisição ao pressionar
+                startSending(action); // Envia uma requisição a cada 30 ms
             } else if (!clawSoundPlayed) {
                 playSound('click-sound');
             }
