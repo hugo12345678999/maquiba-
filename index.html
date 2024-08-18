@@ -230,7 +230,7 @@
                 console.log(`Ação ${action} enviada com sucesso.`);
             })
             .catch(error => {
-                console.error('Erro ao enviar requisição:', error);
+                console.error('Erro:', error);
             });
         }
 
@@ -250,7 +250,7 @@
             }
         }
 
-        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button, #descend-button').forEach(button => {
+        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #descend-button').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
             button.addEventListener('mouseup', stopSendingRequests);
@@ -258,7 +258,7 @@
             button.addEventListener('touchend', stopSendingRequests);
         });
 
-        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2, #descend-button2').forEach(button => {
+        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #descend-button2').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
             button.addEventListener('mouseup', stopSendingRequests);
