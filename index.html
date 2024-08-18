@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Máquina Grua</title>
-   <style>
+    <style>
         body {
             margin: 0;
             display: flex;
@@ -30,6 +30,7 @@
             width: 100%;
             max-width: 1400px; /* Aumentei a largura máxima */
             padding: 20px;
+            display: none; /* Escondido por padrão */
         }
         .live-stream-container {
             flex-grow: 2; /* Aumenta a área do vídeo */
@@ -39,7 +40,7 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
             margin-right: 20px;
         }
-       .live-stream iframe {
+        .live-stream iframe {
             width: 100%;
             height: 600px; /* Aumentei a altura do vídeo */
             border-radius: 10px;
@@ -82,7 +83,6 @@
             height: 50px;
             font-size: 32px;
         }
-
         /* Ajustes para dispositivos móveis */
         @media (max-width: 768px) {
             .content-container {
@@ -112,7 +112,6 @@
                 font-size: 28px;
             }
         }
-
         @media (max-width: 480px) {
             .live-stream iframe {
                 height: 300px; /* Reduz a altura do vídeo para telas ainda menores */
@@ -134,7 +133,11 @@
     <header>
         Máquina Online
     </header>
-    <div class="content-container">
+    <div class="button-container">
+        <button id="maquina1">Máquina 1</button>
+        <button id="maquina2">Máquina 2</button>
+    </div>
+    <div id="maquina1-content" class="content-container">
         <div class="live-stream-container">
             <div class="live-stream">
                 <iframe src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera01" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -157,7 +160,6 @@
             <div class="button-row">
                 <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
             </div>
-            <!-- Botões para iniciar e parar a música -->
             <div class="button-row">
                 <button onclick="startMusic()">Iniciar</button>
                 <button onclick="stopMusic()">Parar</button>
@@ -197,7 +199,7 @@
 
         function sendValue(value) {
             const endpoint = getEndpoint(value);
-            fetch(https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1, {
+            fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +211,7 @@
                 if (!response.ok) {
                     throw new Error('Erro ao enviar a requisição');
                 }
-                console.log(Valor ${value} enviado com sucesso para ${endpoint});
+                console.log(`Valor ${value} enviado com sucesso para ${endpoint}`);
             })
             .catch(error => {
                 console.error('Erro ao enviar requisição:', error);
@@ -269,6 +271,14 @@
             backgroundMusic.pause();
             backgroundMusic.currentTime = 0; // Recomeça a música do início
         }
+
+        document.getElementById('maquina1').addEventListener('click', function() {
+            document.getElementById('maquina1-content').style.display = 'flex';
+        });
+
+        document.getElementById('maquina2').addEventListener('click', function() {
+            document.getElementById('maquina1-content').style.display = 'none';
+        });
 
         window.onload = function() {
             startMusic(); // Inicia a música automaticamente ao carregar a página
