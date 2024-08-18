@@ -184,10 +184,10 @@
                 <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button data-action="descer" id="descend-button2" class="descend-button">DESCER</button>
+                <button data-action="descer" id="descend-button2" class="descend-button">TEMPO</button>
             </div>
             <div class="button-row">
-                <button data-action="tempo" id="tempo-button2" class="tempo-button">TEMPO</button>
+                <button data-action="tempo" id="tempo-button2" class="tempo-button">DESCER</button>
             </div>
             <div class="button-row">
                 <button data-action="comprar" id="buy-button2">💳</button>
@@ -230,7 +230,7 @@
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
             } else if (action === 'tempo') {
-                url = 'https://gilson-telemetria-88dd714ac1f5.herokuapp.com/tempohugo';
+                url = 'https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descerhugo';
                 method = 'POST';
             } else {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
