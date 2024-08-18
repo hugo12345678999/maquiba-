@@ -78,7 +78,7 @@
         button:focus {
             outline: none;
         }
-        .descend-button {
+        .descend-button, .tempo-button {
             width: 200px;
             height: 50px;
             font-size: 32px;
@@ -106,7 +106,7 @@
                 font-size: 24px;
                 margin: 5px;
             }
-            .descend-button {
+            .descend-button, .tempo-button {
                 width: 180px;
                 height: 45px;
                 font-size: 28px;
@@ -121,7 +121,7 @@
                 height: 50px;
                 font-size: 20px;
             }
-            .descend-button {
+            .descend-button, .tempo-button {
                 width: 160px;
                 height: 40px;
                 font-size: 24px;
@@ -155,7 +155,10 @@
                 <button data-action="setabaixo" id="down-button">⬇️</button>
             </div>
             <div class="button-row">
-                <button data-action="descer" id="descend-button">DESCER</button>
+                <button data-action="descer" id="descend-button" class="descend-button">DESCER</button>
+            </div>
+            <div class="button-row">
+                <button data-action="tempo" id="tempo-button" class="tempo-button">TEMPO</button>
             </div>
             <div class="button-row">
                 <button data-action="comprar" id="buy-button">💳</button>
@@ -181,7 +184,10 @@
                 <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button data-action="descer" id="descend-button2">DESCER</button>
+                <button data-action="descer" id="descend-button2" class="descend-button">DESCER</button>
+            </div>
+            <div class="button-row">
+                <button data-action="tempo" id="tempo-button2" class="tempo-button">TEMPO</button>
             </div>
             <div class="button-row">
                 <button data-action="comprar" id="buy-button2">💳</button>
@@ -223,6 +229,9 @@
             if (action === 'descer') {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
+            } else if (action === 'tempo') {
+                url = 'https://gilson-telemetria-88dd714ac1f5.herokuapp.com/tempohugo';
+                method = 'POST';
             } else {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
             }
@@ -230,15 +239,12 @@
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-access-token': token
-                },
-                body: action !== 'descer' ? JSON.stringify({ value: action }) : null
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao enviar a requisição');
+                    'Authorization': `Bearer ${token}`
                 }
-                console.log(`Ação ${action} enviada com sucesso.`);
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`${action} enviado com sucesso.`);
             })
             .catch(error => {
                 console.error('Erro ao enviar requisição:', error);
@@ -311,14 +317,14 @@
             }
         });
 
-        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button').forEach(button => {
+        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button, #tempo-button').forEach(button => {
             button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
             button.addEventListener('mouseup', handleMouseUp);
             button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
             button.addEventListener('touchend', handleTouchEnd);
         });
 
-        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2').forEach(button => {
+        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2, #tempo-button2').forEach(button => {
             button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
             button.addEventListener('mouseup', handleMouseUp);
             button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
