@@ -216,43 +216,46 @@
         }
 
         function sendAction(action) {
-            const endpoint = getEndpoint(action);
             const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
-            fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/${maquinaId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
-                },
-                body: JSON.stringify({ value: action })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao enviar a requisição');
-                }
-                console.log(`Ação ${action} enviada com sucesso.`);
-            })
-            .catch(error => {
-                console.error('Erro ao enviar requisição:', error);
-            });
-        }
-
-        function getEndpoint(action) {
-            switch (action) {
-                case 'setacima':
-                    return 'setacima';
-                case 'setaesquerda':
-                    return 'setaesquerda';
-                case 'setadireita':
-                    return 'setadireita';
-                case 'setabaixo':
-                    return 'setabaixo';
-                case 'descer':
-                    return 'descer';
-                case 'comprar':
-                    return 'comprar';
-                default:
-                    return '';
+            let url = '';
+            if (action === 'descer') {
+                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
+                    },
+                    body: JSON.stringify({ value: action })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar a requisição');
+                    }
+                    console.log(`Ação ${action} enviada com sucesso.`);
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar requisição:', error);
+                });
+            } else {
+                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
+                    },
+                    body: JSON.stringify({ value: action })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar a requisição');
+                    }
+                    console.log(`Ação ${action} enviada com sucesso.`);
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar requisição:', error);
+                });
             }
         }
 
