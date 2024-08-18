@@ -83,6 +83,7 @@
             height: 50px;
             font-size: 32px;
         }
+        /* Ajustes para dispositivos móveis */
         @media (max-width: 768px) {
             .content-container {
                 flex-direction: column;
@@ -144,24 +145,20 @@
         </div>
         <div class="button-container">
             <div class="button-row">
-                <button id="up-button" data-action="setacima">⬆️</button>
+                <button data-action="setacima" id="up-button">⬆️</button>
             </div>
             <div class="button-row">
-                <button id="left-button" data-action="setaesquerda">⬅️</button>
-                <button id="right-button" data-action="setadireita">➡️</button>
+                <button data-action="setaesquerda" id="left-button">⬅️</button>
+                <button data-action="setadireita" id="right-button">➡️</button>
             </div>
             <div class="button-row">
-                <button id="down-button" data-action="setabaixo">⬇️</button>
+                <button data-action="setabaixo" id="down-button">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" data-action="descer">DESCER</button>
+                <button class="descend-button" data-action="descer" id="descend-button">DESCER</button>
             </div>
             <div class="button-row">
-                <button id="buy-button" data-action="comprar">💳</button>
-            </div>
-            <div class="button-row">
-                <button onclick="startMusic()">Iniciar</button>
-                <button onclick="stopMusic()">Parar</button>
+                <button data-action="comprar" id="buy-button">💳</button>
             </div>
         </div>
     </div>
@@ -169,29 +166,25 @@
     <div id="maquina2-content" class="content-container">
         <div class="live-stream-container">
             <div class="live-stream">
-                <iframe id="maquina2-iframe" src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera02" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera02" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
         <div class="button-container">
             <div class="button-row">
-                <button id="up-button2" data-action="setacima">⬆️</button>
+                <button data-action="setacima" id="up-button2">⬆️</button>
             </div>
             <div class="button-row">
-                <button id="left-button2" data-action="setaesquerda">⬅️</button>
-                <button id="right-button2" data-action="setadireita">➡️</button>
+                <button data-action="setaesquerda" id="left-button2">⬅️</button>
+                <button data-action="setadireita" id="right-button2">➡️</button>
             </div>
             <div class="button-row">
-                <button id="down-button2" data-action="setabaixo">⬇️</button>
+                <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" data-action="descer">DESCER</button>
+                <button class="descend-button" data-action="descer" id="descend-button2">DESCER</button>
             </div>
             <div class="button-row">
-                <button id="buy-button2" data-action="comprar">💳</button>
-            </div>
-            <div class="button-row">
-                <button onclick="startMusic()">Iniciar</button>
-                <button onclick="stopMusic()">Parar</button>
+                <button data-action="comprar" id="buy-button2">💳</button>
             </div>
         </div>
     </div>
@@ -267,10 +260,13 @@
             if (action === 'descer') {
                 playSound('claw-sound');
                 clawSoundPlayed = true;
+                sendAction(action); // Envia uma requisição ao pressionar
             } else if (!clawSoundPlayed) {
                 playSound('click-sound');
             }
-            startSending(action);
+            if (action !== 'descer') {
+                startSending(action);
+            }
         }
 
         function handleMouseUp() {
