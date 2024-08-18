@@ -144,20 +144,20 @@
         </div>
         <div class="button-container">
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(30); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(30)" onmouseup="handleMouseUp()">⬆️</button>
+                <button id="up-button" data-action="setacima">⬆️</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(20); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(20)" onmouseup="handleMouseUp()">⬅️</button>
-                <button ontouchstart="handleTouchStart(10); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(10)" onmouseup="handleMouseUp()">➡️</button>
+                <button id="left-button" data-action="setaesquerda">⬅️</button>
+                <button id="right-button" data-action="setadireita">➡️</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(40); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(40)" onmouseup="handleMouseUp()">⬇️</button>
+                <button id="down-button" data-action="setabaixo">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" ontouchstart="handleTouchStart(50); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(50)" onmouseup="handleMouseUp()">DESCER</button>
+                <button class="descend-button" data-action="descer">DESCER</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
+                <button id="buy-button" data-action="comprar">💳</button>
             </div>
             <div class="button-row">
                 <button onclick="startMusic()">Iniciar</button>
@@ -174,20 +174,20 @@
         </div>
         <div class="button-container">
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(30); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(30)" onmouseup="handleMouseUp()">⬆️</button>
+                <button id="up-button2" data-action="setacima">⬆️</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(20); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(20)" onmouseup="handleMouseUp()">⬅️</button>
-                <button ontouchstart="handleTouchStart(10); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(10)" onmouseup="handleMouseUp()">➡️</button>
+                <button id="left-button2" data-action="setaesquerda">⬅️</button>
+                <button id="right-button2" data-action="setadireita">➡️</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(40); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(40)" onmouseup="handleMouseUp()">⬇️</button>
+                <button id="down-button2" data-action="setabaixo">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" ontouchstart="handleTouchStart(50); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(50)" onmouseup="handleMouseUp()">DESCER</button>
+                <button class="descend-button" data-action="descer">DESCER</button>
             </div>
             <div class="button-row">
-                <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
+                <button id="buy-button2" data-action="comprar">💳</button>
             </div>
             <div class="button-row">
                 <button onclick="startMusic()">Iniciar</button>
@@ -202,7 +202,6 @@
 
     <script>
         let sendingInterval;
-        let initialTimeout;
         let clawSoundPlayed = false;
         const backgroundMusic = document.getElementById('background-music');
 
@@ -212,21 +211,19 @@
             sound.play();
         }
 
-        function startSending(value) {
+        function startSending(action) {
             sendingInterval = setInterval(() => {
-                sendValue(value);
+                sendAction(action);
             }, 30);
         }
 
         function stopSending() {
             clearInterval(sendingInterval);
-            clearInterval(soundInterval);
-            clearTimeout(initialTimeout);
             clawSoundPlayed = false;
         }
 
-        function sendValue(value) {
-            const endpoint = getEndpoint(value);
+        function sendAction(action) {
+            const endpoint = getEndpoint(action);
             const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
             fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/${maquinaId}`, {
                 method: 'POST',
@@ -234,57 +231,54 @@
                     'Content-Type': 'application/json',
                     'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
                 },
-                body: JSON.stringify({ value: value })
+                body: JSON.stringify({ value: action })
             })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Erro ao enviar a requisição');
                 }
-                console.log(`Valor ${value} enviado com sucesso para ${endpoint}`);
+                console.log(`Ação ${action} enviada com sucesso.`);
             })
             .catch(error => {
                 console.error('Erro ao enviar requisição:', error);
             });
         }
 
-        function getEndpoint(value) {
-            switch (value) {
-                case 10:
-                    return 'setadireita';
-                case 20:
-                    return 'setaesquerda';
-                case 30:
+        function getEndpoint(action) {
+            switch (action) {
+                case 'setacima':
                     return 'setacima';
-                case 40:
+                case 'setaesquerda':
+                    return 'setaesquerda';
+                case 'setadireita':
+                    return 'setadireita';
+                case 'setabaixo':
                     return 'setabaixo';
-                case 50:
+                case 'descer':
                     return 'descer';
-                case 60:
+                case 'comprar':
                     return 'comprar';
                 default:
                     return '';
             }
         }
 
-        function handleMouseDown(value) {
-            if (value === 50) {
+        function handleMouseDown(action) {
+            if (action === 'descer') {
                 playSound('claw-sound');
                 clawSoundPlayed = true;
             } else if (!clawSoundPlayed) {
                 playSound('click-sound');
             }
-            sendValue(value);
-            initialTimeout = setTimeout(() => {
-                startSending(value);
-            }, 200);
+            startSending(action);
         }
 
         function handleMouseUp() {
             stopSending();
         }
 
-        function handleTouchStart(value) {
-            handleMouseDown(value);
+        function handleTouchStart(action) {
+            handleMouseDown(action);
         }
 
         function handleTouchEnd() {
@@ -330,6 +324,20 @@
                 document.getElementById('maquina1-content').style.display = 'none';
                 document.getElementById('maquina2-content').style.display = 'flex';
             }
+        });
+
+        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button').forEach(button => {
+            button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
+            button.addEventListener('mouseup', handleMouseUp);
+            button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
+            button.addEventListener('touchend', handleTouchEnd);
+        });
+
+        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2').forEach(button => {
+            button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
+            button.addEventListener('mouseup', handleMouseUp);
+            button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
+            button.addEventListener('touchend', handleTouchEnd);
         });
 
         window.onload = function() {
