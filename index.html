@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Máquina Grua</title>
-    <style>
+   <style>
         body {
             margin: 0;
             display: flex;
@@ -39,12 +39,12 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
             margin-right: 20px;
         }
-        .live-stream iframe {
-            width: 100%;
-            height: 600px; /* Aumentei a altura do vídeo */
-            border-radius: 10px;
-            filter: brightness(1.1); /* Aumenta o brilho do vídeo */
-        }
+       .live-stream iframe {
+    width: 100%;
+    height: 600px; /* Aumentei a altura do vídeo */
+    border-radius: 10px;
+    filter: brightness(1.1); /* Aumenta o brilho do vídeo */
+}
         .button-container {
             display: flex;
             flex-direction: column;
@@ -175,7 +175,6 @@
         let initialTimeout;
         let clawSoundPlayed = false; // Flag to track if claw sound has been played
         const backgroundMusic = document.getElementById('background-music');
-        const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM2NDQ0ODd9.ItwXPLRHpRLy4TPVXF3vh3lxCmDGubRtXmUNuz5e_1Y'; // Substitua pelo seu token
 
         function playSound(soundId) {
             const sound = document.getElementById(soundId);
@@ -198,11 +197,11 @@
 
         function sendValue(value) {
             const endpoint = getEndpoint(value);
-            fetch(`https://testeeeeeee-093ae8864267.herokuapp.com/${endpoint}/1`, {
+            fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjQwMDM0MjN9.DZZ70Ewo2vwbh5zFnAaX7aH5hIorHYsnKZH56SKpZ7c` // Adiciona o token no cabeçalho
+                    'Content-Type': 'application/json'
+                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM2NDQ0ODd9.ItwXPLRHpRLy4TPVXF3vh3lxCmDGubRtXmUNuz5e_1Y'
                 },
                 body: JSON.stringify({ value: value })
             })
