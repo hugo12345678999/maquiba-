@@ -202,7 +202,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}` // Adiciona o token no cabeçalho
+                    'x-access-token': `${accessToken}` // Adiciona o token no cabeçalho
                 },
                 body: JSON.stringify({ value: value })
             })
