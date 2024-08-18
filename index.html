@@ -324,9 +324,12 @@
             }
         });
 
-        document.getElementById('maquina2').addEventListener('click', function() {
-            document.getElementById('maquina1-content').style.display = 'none';
-            document.getElementById('maquina2-content').style.display = 'flex';
+        document.getElementById('maquina2').addEventListener('click', async function() {
+            const statusOk = await checkMachineStatus(2);
+            if (statusOk) {
+                document.getElementById('maquina1-content').style.display = 'none';
+                document.getElementById('maquina2-content').style.display = 'flex';
+            }
         });
 
         window.onload = function() {
