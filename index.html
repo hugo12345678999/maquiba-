@@ -194,140 +194,137 @@
     <audio id="background-music" src="background-music.mp3" preload="auto" loop></audio>
 
     <script>
-        let sendingInterval;
-        let clawSoundPlayed = false;
-        const backgroundMusic = document.getElementById('background-music');
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE';
+      let sendingInterval;
+let clawSoundPlayed = false;
+const backgroundMusic = document.getElementById('background-music');
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE';
 
-        function playSound(soundId) {
-            const sound = document.getElementById(soundId);
-            sound.currentTime = 0;
-            sound.play();
+function playSound(soundId) {
+    const sound = document.getElementById(soundId);
+    sound.currentTime = 0;
+    sound.play();
+}
+
+function startSending(action) {
+    sendingInterval = setInterval(() => {
+        sendAction(action);
+    }, 30); // Enviar requisição a cada 30 milissegundos
+}
+
+function stopSending() {
+    clearInterval(sendingInterval);
+    clawSoundPlayed = false;
+}
+
+function sendAction(action) {
+    const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
+    let url = '';
+    let method = 'POST';
+    if (action === 'descer') {
+        url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
+        method = 'POST';
+    } else {
+        url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
+    }
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+        },
+        body: action !== 'descer' ? JSON.stringify({ value: action }) : null
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao enviar a requisição');
         }
+        console.log(`Ação ${action} enviada com sucesso.`);
+    })
+    .catch(error => {
+        console.error('Erro ao enviar requisição:', error);
+    });
+}
 
-        function startSending(action) {
-            sendingInterval = setInterval(() => {
-                sendAction(action);
-            }, 30);
+function handleMouseDown(action) {
+    if (action === 'descer') {
+        playSound('claw-sound');
+        clawSoundPlayed = true;
+        sendAction(action); // Envia uma requisição ao pressionar
+    } else if (!clawSoundPlayed) {
+        playSound('click-sound');
+    }
+    if (action !== 'descer') {
+        startSending(action);
+    }
+}
+
+function handleMouseUp() {
+    stopSending();
+}
+
+function handleTouchStart(action) {
+    handleMouseDown(action);
+}
+
+function handleTouchEnd() {
+    handleMouseUp();
+}
+
+function startMusic() {
+    backgroundMusic.play();
+}
+
+function stopMusic() {
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+}
+
+async function checkMachineStatus(machineId) {
+    try {
+        const response = await fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/status/${machineId}`);
+        const data = await response.json();
+        if (data && data.online !== null) {
+            console.log('Status da máquina OK');
+            return true;
         }
+        console.log('Status retornou null. Não é possível exibir a máquina.');
+        return false;
+    } catch (error) {
+        console.error('Erro ao verificar o status da máquina:', error);
+        return false;
+    }
+}
 
-        function stopSending() {
-            clearInterval(sendingInterval);
-            clawSoundPlayed = false;
-        }
+document.getElementById('maquina1').addEventListener('click', async function() {
+    const statusOk = await checkMachineStatus(1);
+    if (statusOk) {
+        document.getElementById('maquina1-content').style.display = 'flex';
+        document.getElementById('maquina2-content').style.display = 'none';
+    }
+});
 
-        function sendAction(action) {
-            const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
-            let url = '';
-            let method = 'POST';
-            if (action === 'descer') {
-                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
-                method = 'POST';
-            } else {
-                url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${action}/${maquinaId}`;
-            }
-            fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': token
-                },
-                body: action !== 'descer' ? JSON.stringify({ value: action }) : null
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao enviar a requisição');
-                }
-                console.log(`Ação ${action} enviada com sucesso.`);
-            })
-            .catch(error => {
-                console.error('Erro ao enviar requisição:', error);
-            });
-        }
+document.getElementById('maquina2').addEventListener('click', async function() {
+    const statusOk = await checkMachineStatus(2);
+    if (statusOk) {
+        document.getElementById('maquina1-content').style.display = 'none';
+        document.getElementById('maquina2-content').style.display = 'flex';
+    }
+});
 
-        function handleMouseDown(action) {
-            if (action === 'descer') {
-                playSound('claw-sound');
-                clawSoundPlayed = true;
-                sendAction(action); // Envia uma requisição ao pressionar
-            } else if (!clawSoundPlayed) {
-                playSound('click-sound');
-            }
-            if (action !== 'descer') {
-                startSending(action);
-            }
-        }
+document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button').forEach(button => {
+    button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
+    button.addEventListener('mouseup', handleMouseUp);
+    button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
+    button.addEventListener('touchend', handleTouchEnd);
+});
 
-        function handleMouseUp() {
-            stopSending();
-        }
+document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2').forEach(button => {
+    button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
+    button.addEventListener('mouseup', handleMouseUp);
+    button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
+    button.addEventListener('touchend', handleTouchEnd);
+});
 
-        function handleTouchStart(action) {
-            handleMouseDown(action);
-        }
-
-        function handleTouchEnd() {
-            handleMouseUp();
-        }
-
-        function startMusic() {
-            backgroundMusic.play();
-        }
-
-        function stopMusic() {
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-        }
-
-        async function checkMachineStatus(machineId) {
-            try {
-                const response = await fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/status/${machineId}`);
-                const data = await response.json();
-                if (data && data.online !== null) {
-                    console.log('Status da máquina OK');
-                    return true;
-                }
-                console.log('Status retornou null. Não é possível exibir a máquina.');
-                return false;
-            } catch (error) {
-                console.error('Erro ao verificar o status da máquina:', error);
-                return false;
-            }
-        }
-
-        document.getElementById('maquina1').addEventListener('click', async function() {
-            const statusOk = await checkMachineStatus(1);
-            if (statusOk) {
-                document.getElementById('maquina1-content').style.display = 'flex';
-                document.getElementById('maquina2-content').style.display = 'none';
-            }
-        });
-
-        document.getElementById('maquina2').addEventListener('click', async function() {
-            const statusOk = await checkMachineStatus(2);
-            if (statusOk) {
-                document.getElementById('maquina1-content').style.display = 'none';
-                document.getElementById('maquina2-content').style.display = 'flex';
-            }
-        });
-
-        document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button').forEach(button => {
-            button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
-            button.addEventListener('mouseup', handleMouseUp);
-            button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
-            button.addEventListener('touchend', handleTouchEnd);
-        });
-
-        document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2').forEach(button => {
-            button.addEventListener('mousedown', () => handleMouseDown(button.dataset.action));
-            button.addEventListener('mouseup', handleMouseUp);
-            button.addEventListener('touchstart', () => handleTouchStart(button.dataset.action));
-            button.addEventListener('touchend', handleTouchEnd);
-        });
-
-        window.onload = function() {
-            startMusic();
-        };
-    </script>
-</body>
-</html>
+window.onload = function() {
+    startMusic();
+};
