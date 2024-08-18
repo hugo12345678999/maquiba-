@@ -197,6 +197,8 @@
         const backgroundMusic = document.getElementById('background-music');
         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE';
 
+        let intervalId;
+
         function playSound(soundId) {
             const sound = document.getElementById(soundId);
             sound.currentTime = 0;
@@ -232,23 +234,36 @@
             });
         }
 
+        function startSendingRequests(action) {
+            intervalId = setInterval(() => sendAction(action), 30);
+        }
+
+        function stopSendingRequests() {
+            clearInterval(intervalId);
+        }
+
         function handleButtonAction(action) {
             if (action === 'descer') {
-                playSound('claw-sound');
+                startSendingRequests(action);
             } else {
-                playSound('click-sound');
+                sendAction(action);
             }
-            sendAction(action);
         }
 
         document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #buy-button, #descend-button').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
+            button.addEventListener('mouseup', stopSendingRequests);
+            button.addEventListener('mouseleave', stopSendingRequests);
+            button.addEventListener('touchend', stopSendingRequests);
         });
 
         document.querySelectorAll('#up-button2, #left-button2, #right-button2, #down-button2, #buy-button2, #descend-button2').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
+            button.addEventListener('mouseup', stopSendingRequests);
+            button.addEventListener('mouseleave', stopSendingRequests);
+            button.addEventListener('touchend', stopSendingRequests);
         });
 
         document.querySelectorAll('#maquina1, #maquina2').forEach(button => {
