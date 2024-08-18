@@ -227,11 +227,11 @@
                 if (!response.ok) {
                     throw new Error('Erro ao enviar a requisição');
                 }
-                console.log(`Ação ${action} enviada com sucesso.`);
+                console.log(`Ação ${action} enviada com sucesso`);
+                if (action === 'descer') playSound('claw-sound');
+                else playSound('click-sound');
             })
-            .catch(error => {
-                console.error('Erro:', error);
-            });
+            .catch(error => console.error(error));
         }
 
         function startSendingRequests(action) {
@@ -299,7 +299,7 @@
         });
 
         document.querySelectorAll('#maquina1, #maquina2').forEach(button => {
-            button.addEventListener('click', () => handleMachineClick(button.id));
+            button.addEventListener('click', () => handleMachineClick(button.id.replace('maquina', '')));
         });
 
         backgroundMusic.play();
