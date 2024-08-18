@@ -40,11 +40,11 @@
             margin-right: 20px;
         }
        .live-stream iframe {
-            width: 100%;
-            height: 600px; /* Aumentei a altura do vídeo */
-            border-radius: 10px;
-            filter: brightness(1.1); /* Aumenta o brilho do vídeo */
-        }
+    width: 100%;
+    height: 600px; /* Aumentei a altura do vídeo */
+    border-radius: 10px;
+    filter: brightness(1.1); /* Aumenta o brilho do vídeo */
+}
         .button-container {
             display: flex;
             flex-direction: column;
@@ -197,11 +197,10 @@
 
         function sendValue(value) {
             const endpoint = getEndpoint(value);
-            fetch(https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1, {
+            fetch(https://testeeeeeee-093ae8864267.herokuapp.com/${endpoint}, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjBmMWM5YS1lOTk3LTQxNTctOTg1MC01MDEwNjVhYjZmOWUiLCJpYXQiOjE3MjM1OTQ5MTh9.s5EIFP5utz3nyPmXxaASMrHQ98vj9dCRLVGYVi0VOuE'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ value: value })
             })
@@ -219,60 +218,50 @@
         function getEndpoint(value) {
             switch (value) {
                 case 10:
-                    return 'setadireita';
-                case 20:
-                    return 'setaesquerda';
-                case 30:
                     return 'setacima';
-                case 40:
+                case 20:
                     return 'setabaixo';
+                case 30:
+                    return 'setaesquerda';
+                case 40:
+                    return 'setadireita';
                 case 50:
                     return 'descer';
                 case 60:
-                    return 'comprar';
+                    return 'cartao';
                 default:
                     return '';
             }
         }
 
-        function handleMouseDown(value) {
-            if (value === 50) { // Se o botão "descer" for pressionado
-                playSound('claw-sound'); // Toca o som da garra imediatamente
-                clawSoundPlayed = true; // Set flag to true
-            } else if (!clawSoundPlayed) { // Prevent click sound if claw sound was played
-                playSound('click-sound');
-            }
-            sendValue(value);
+        function handleTouchStart(value) {
             initialTimeout = setTimeout(() => {
                 startSending(value);
-            }, 200); // Aguarda 200ms antes de iniciar o envio contínuo
-        }
-
-        function handleMouseUp() {
-            stopSending();
-        }
-
-        function handleTouchStart(value) {
-            handleMouseDown(value);
+            }, 1); // Delay inicial para começar a enviar
+            soundInterval = setInterval(() => {
+                playSound('click-sound');
+            }, 1000); // Reproduzir som a cada segundo
         }
 
         function handleTouchEnd() {
-            handleMouseUp();
+            stopSending();
         }
 
-        // Funções para iniciar e parar a música
+        function handleMouseDown(value) {
+            handleTouchStart(value);
+        }
+
+        function handleMouseUp() {
+            handleTouchEnd();
+        }
+
         function startMusic() {
             backgroundMusic.play();
         }
 
         function stopMusic() {
             backgroundMusic.pause();
-            backgroundMusic.currentTime = 0; // Recomeça a música do início
         }
-
-        window.onload = function() {
-            startMusic(); // Inicia a música automaticamente ao carregar a página
-        };
     </script>
 </body>
 </html>
