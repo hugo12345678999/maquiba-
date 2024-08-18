@@ -250,6 +250,38 @@
             }
         }
 
+        function checkMachineStatus(machineId) {
+            return fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/status/${machineId}`, {
+                headers: {
+                    'x-access-token': token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.online === "9999-12-31T23:59:59.000Z") {
+                    return true; // Máquina pode ser acessada
+                }
+                return false; // Máquina não pode ser acessada
+            })
+            .catch(error => {
+                console.error('Erro ao verificar status da máquina:', error);
+                return false; // Tratar erro como inacessível
+            });
+        }
+
+        function handleMachineClick(machineId) {
+            checkMachineStatus(machineId).then(canAccess => {
+                if (canAccess) {
+                    document.querySelectorAll('.content-container').forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    document.getElementById(`${machineId}-content`).style.display = 'flex';
+                } else {
+                    alert('Máquina não disponível.');
+                }
+            });
+        }
+
         document.querySelectorAll('#up-button, #left-button, #right-button, #down-button, #descend-button').forEach(button => {
             button.addEventListener('mousedown', () => handleButtonAction(button.dataset.action));
             button.addEventListener('touchstart', () => handleButtonAction(button.dataset.action));
@@ -267,12 +299,7 @@
         });
 
         document.querySelectorAll('#maquina1, #maquina2').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.content-container').forEach(container => {
-                    container.style.display = 'none';
-                });
-                document.getElementById(`${button.id}-content`).style.display = 'flex';
-            });
+            button.addEventListener('click', () => handleMachineClick(button.id));
         });
 
         backgroundMusic.play();
