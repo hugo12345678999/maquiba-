@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle</title>
-    <style>
+    <title>Máquina Grua</title>
+   <style>
         body {
             margin: 0;
             display: flex;
@@ -15,120 +15,189 @@
             font-family: Arial, sans-serif;
             background-color: #e5f2fc; /* Cor de fundo azul-claro */
         }
+        header {
+            background-color: #acc9f0; /* Cor de fundo do header */
+            color: black;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 24px;
+            width: 100%;
+        }
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px; /* Aumentei a largura máxima */
+            padding: 20px;
+        }
+        .live-stream-container {
+            flex-grow: 2; /* Aumenta a área do vídeo */
+            background-color: white; /* Fundo branco */
+            border-radius: 15px; /* Bordas arredondadas */
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            margin-right: 20px;
+        }
+       .live-stream iframe {
+            width: 100%;
+            height: 600px; /* Aumentei a altura do vídeo */
+            border-radius: 10px;
+            filter: brightness(1.1); /* Aumenta o brilho do vídeo */
+        }
         .button-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            background-color: #f6c222; /* Cor amarela para os botões */
+            border-radius: 50%;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Sombra para o container */
         }
-        .button-container button {
-            margin: 10px;
-            padding: 20px;
-            font-size: 24px;
-            cursor: pointer;
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        button {
+            width: 70px;
+            height: 70px;
+            background-color: lightgray;
             border: none;
-            border-radius: 10px;
-            background-color: #acc9f0;
-            color: black;
-            transition: background-color 0.3s;
+            border-radius: 5px;
+            font-size: 28px;
+            margin: 10px;
+            cursor: pointer;
+            user-select: none;
         }
-        .button-container button:hover {
-            background-color: #82a4e0;
+        button:active {
+            background-color: gray;
         }
-        .maquina-container {
-            display: none;
-            width: 100%;
-            height: 100%;
+        button:focus {
+            outline: none;
+        }
+        .descend-button {
+            width: 200px;
+            height: 50px;
+            font-size: 32px;
+        }
+
+        /* Ajustes para dispositivos móveis */
+        @media (max-width: 768px) {
+            .content-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .live-stream-container {
+                margin-right: 0;
+                margin-bottom: 30px;
+                padding: 20px;
+            }
+            .live-stream iframe {
+                height: 400px; /* Reduz a altura do vídeo para telas menores */
+            }
+            .button-container {
+                padding: 20px;
+            }
+            button {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                margin: 5px;
+            }
+            .descend-button {
+                width: 180px;
+                height: 45px;
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .live-stream iframe {
+                height: 300px; /* Reduz a altura do vídeo para telas ainda menores */
+            }
+            button {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .descend-button {
+                width: 160px;
+                height: 40px;
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="button-container">
-        <button onclick="showMaquina('maquina1')">Máquina 1</button>
-        <button onclick="showMaquina('maquina2')">Máquina 2</button>
-    </div>
-
-    <div id="maquina1" class="maquina-container">
-        <!-- Conteúdo da Máquina 1 -->
-        <header>
-            Máquina Online
-        </header>
-        <div class="content-container">
-            <div class="live-stream-container">
-                <div class="live-stream">
-                    <iframe src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera01" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-            <div class="button-container">
-                <div class="button-row">
-                    <button ontouchstart="handleTouchStart(30); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(30)" onmouseup="handleMouseUp()">⬆️</button>
-                </div>
-                <div class="button-row">
-                    <button ontouchstart="handleTouchStart(20); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(20)" onmouseup="handleMouseUp()">⬅️</button>
-                    <button ontouchstart="handleTouchStart(10); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(10)" onmouseup="handleMouseUp()">➡️</button>
-                </div>
-                <div class="button-row">
-                    <button ontouchstart="handleTouchStart(40); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(40)" onmouseup="handleMouseUp()">⬇️</button>
-                </div>
-                <div class="button-row">
-                    <button class="descend-button" ontouchstart="handleTouchStart(50); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(50)" onmouseup="handleMouseUp()">DESCER</button>
-                </div>
-                <div class="button-row">
-                    <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
-                </div>
-                <div class="button-row">
-                    <button onclick="startMusic()">Iniciar</button>
-                    <button onclick="stopMusic()">Parar</button>
-                </div>
+    <header>
+        Máquina Online
+    </header>
+    <div class="content-container">
+        <div class="live-stream-container">
+            <div class="live-stream">
+                <iframe src="https://delaysp01.logicahost.com.br:5443/toybox/play.html?name=camera01" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
-        <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-        <audio id="claw-sound" src="garra.mp3" preload="auto"></audio>
-        <audio id="background-music" src="jogo.mp3" loop></audio>
+        <div class="button-container">
+            <div class="button-row">
+                <button ontouchstart="handleTouchStart(30); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(30)" onmouseup="handleMouseUp()">⬆️</button>
+            </div>
+            <div class="button-row">
+                <button ontouchstart="handleTouchStart(20); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(20)" onmouseup="handleMouseUp()">⬅️</button>
+                <button ontouchstart="handleTouchStart(10); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(10)" onmouseup="handleMouseUp()">➡️</button>
+            </div>
+            <div class="button-row">
+                <button ontouchstart="handleTouchStart(40); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(40)" onmouseup="handleMouseUp()">⬇️</button>
+            </div>
+            <div class="button-row">
+                <button class="descend-button" ontouchstart="handleTouchStart(50); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(50)" onmouseup="handleMouseUp()">DESCER</button>
+            </div>
+            <div class="button-row">
+                <button ontouchstart="handleTouchStart(60); event.preventDefault();" ontouchend="handleTouchEnd(); event.preventDefault();" onmousedown="handleMouseDown(60)" onmouseup="handleMouseUp()">💳</button>
+            </div>
+            <!-- Botões para iniciar e parar a música -->
+            <div class="button-row">
+                <button onclick="startMusic()">Iniciar</button>
+                <button onclick="stopMusic()">Parar</button>
+            </div>
+        </div>
     </div>
 
-    <div id="maquina2" class="maquina-container">
-        <!-- Conteúdo da Máquina 2 -->
-        <p>Conteúdo da Máquina 2 aqui</p>
-    </div>
+    <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+    <audio id="claw-sound" src="garra.mp3" preload="auto"></audio>
+    <audio id="background-music" src="jogo.mp3" loop></audio>
 
     <script>
-        function showMaquina(maquinaId) {
-            // Esconde todas as máquinas
-            document.querySelectorAll('.maquina-container').forEach(container => {
-                container.style.display = 'none';
-            });
-
-            // Mostra a máquina selecionada
-            document.getElementById(maquinaId).style.display = 'block';
-        }
-
-        // Funções de controle da máquina 1 (as mesmas já fornecidas)
         let sendingInterval;
+        let soundInterval;
         let initialTimeout;
-        let clawSoundPlayed = false;
+        let clawSoundPlayed = false; // Flag to track if claw sound has been played
         const backgroundMusic = document.getElementById('background-music');
 
         function playSound(soundId) {
             const sound = document.getElementById(soundId);
-            sound.currentTime = 0;
+            sound.currentTime = 0; // Rewind to the start
             sound.play();
         }
 
         function startSending(value) {
             sendingInterval = setInterval(() => {
                 sendValue(value);
-            }, 30);
+            }, 30); // Envia a cada 30ms
         }
 
         function stopSending() {
             clearInterval(sendingInterval);
+            clearInterval(soundInterval);
             clearTimeout(initialTimeout);
-            clawSoundPlayed = false;
+            clawSoundPlayed = false; // Reset flag when stopping sending
         }
 
         function sendValue(value) {
             const endpoint = getEndpoint(value);
-            fetch(`https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1`, {
+            fetch(https://gilson-telemetria-88dd714ac1f5.herokuapp.com/${endpoint}/1, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,7 +209,7 @@
                 if (!response.ok) {
                     throw new Error('Erro ao enviar a requisição');
                 }
-                console.log(`Valor ${value} enviado com sucesso para ${endpoint}`);
+                console.log(Valor ${value} enviado com sucesso para ${endpoint});
             })
             .catch(error => {
                 console.error('Erro ao enviar requisição:', error);
@@ -167,16 +236,16 @@
         }
 
         function handleMouseDown(value) {
-            if (value === 50) {
-                playSound('claw-sound');
-                clawSoundPlayed = true;
-            } else if (!clawSoundPlayed) {
+            if (value === 50) { // Se o botão "descer" for pressionado
+                playSound('claw-sound'); // Toca o som da garra imediatamente
+                clawSoundPlayed = true; // Set flag to true
+            } else if (!clawSoundPlayed) { // Prevent click sound if claw sound was played
                 playSound('click-sound');
             }
             sendValue(value);
             initialTimeout = setTimeout(() => {
                 startSending(value);
-            }, 200);
+            }, 200); // Aguarda 200ms antes de iniciar o envio contínuo
         }
 
         function handleMouseUp() {
@@ -191,17 +260,18 @@
             handleMouseUp();
         }
 
+        // Funções para iniciar e parar a música
         function startMusic() {
             backgroundMusic.play();
         }
 
         function stopMusic() {
             backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
+            backgroundMusic.currentTime = 0; // Recomeça a música do início
         }
 
         window.onload = function() {
-            startMusic();
+            startMusic(); // Inicia a música automaticamente ao carregar a página
         };
     </script>
 </body>
