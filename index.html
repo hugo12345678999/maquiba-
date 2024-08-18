@@ -158,7 +158,7 @@
                 <button data-action="descer" id="descend-button">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="comprar" id="buy-button">💳</button>
+                <button data-action="credito" id="buy-button">💳</button>
             </div>
         </div>
     </div>
@@ -184,7 +184,7 @@
                 <button  data-action="descer" id="descend-button2">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="comprar" id="buy-button2">💳</button>
+                <button data-action="credito" id="buy-button2">💳</button>
             </div>
         </div>
     </div>
@@ -220,7 +220,7 @@
             const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
             let url = '';
             let method = 'POST';
-            if (action === 'descer') {
+            if (action === 'hug') {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
             } else {
