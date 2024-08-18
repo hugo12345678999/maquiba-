@@ -158,7 +158,7 @@
                 <button class="descend-button" data-action="descer" id="descend-button">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="comprar" id="buy-button">💳</button>
+                <button data-action="credito" id="buy-button">💳</button>
             </div>
         </div>
     </div>
@@ -181,10 +181,10 @@
                 <button data-action="setabaixo" id="down-button2">⬇️</button>
             </div>
             <div class="button-row">
-                <button class="descend-button" data-action="descer" id="descend-button2">DESCER</button>
+                <button data-action="descer" id="descend-button2">DESCER</button>
             </div>
             <div class="button-row">
-                <button data-action="comprar" id="buy-button2">💳</button>
+                <button data-action="credito" id="buy-button2">💳</button>
             </div>
         </div>
     </div>
@@ -220,7 +220,7 @@
             const maquinaId = document.querySelector('div.content-container[style*="display: flex;"]').id === 'maquina1-content' ? '1' : '2';
             let url = '';
             let method = 'POST';
-            if (action === 'descer') {
+            if (action === 'desceur') {
                 url = `https://gilson-telemetria-88dd714ac1f5.herokuapp.com/descer/${maquinaId}`;
                 method = 'POST';
             } else {
@@ -232,7 +232,7 @@
                     'Content-Type': 'application/json',
                     'x-access-token': token
                 },
-                body: action !== 'descer' ? JSON.stringify({ value: action }) : null
+                body: action !== 'desceur' ? JSON.stringify({ value: action }) : null
             })
             .then(response => {
                 if (!response.ok) {
